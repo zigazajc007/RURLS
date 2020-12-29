@@ -1,10 +1,14 @@
 <?php
 require "settings.php";
 
+if($parameter == null || $parameter == "") $parameter = "code";
+
 if(isset($_GET[$parameter])){
     $json = json_decode(file_get_contents("urls.json"), true);
     if(isset($_GET[$parameter])) header("Location: " . $json[$_GET[$parameter]]);
 }
+
+$data = json_decode(file_get_contents("urls.json"), true);
 
 ?>
 
@@ -37,8 +41,8 @@ if(isset($_GET[$parameter])){
             <div class="mb-3">
               <label class="form-label">New URL</label>
               <div class="input-group input-group-flat">
-                <span class="input-group-text" id="new_url_domain"><?php echo $domain . "?" . $parameter . "="; ?></span>
-                <input type="text" name="new_url" id="new_url" value="<?= $_GET["newurl"]; ?>" class="form-control ps-0" autocomplete="off">
+                <span class="input-group-text" id="new_url_domain"><?= ($parameter == "code") ? $domain . "/" : $domain . "?" . $parameter . "="; ?></span>
+                <input type="text" name="new_url" id="new_url" style="background-color: #fff;" value="<?= $_GET["newurl"]; ?>" class="form-control ps-0" autocomplete="off" <?= $random_url_generator ? "readonly" : "";  ?>>
                 <span class="input-group-text"><a href="#" onclick="CopyToClipboard();" class="link-secondary" title="Copy" data-bs-toggle="tooltip"><svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><rect x="8" y="8" width="12" height="12" rx="2" /><path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2" /></svg><a></span>
               </div>
             </div>
@@ -47,6 +51,9 @@ if(isset($_GET[$parameter])){
             </div>
           </div>
         </form>
+        <div class="text-center text-muted mt-3">
+          There are corrently <b><?= count($data); ?></b> <a href="<?= $domain; ?>"><?= $name; ?></a> urls.
+        </div>
       </div>
     </div>
 
